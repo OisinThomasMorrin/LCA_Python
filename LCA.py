@@ -11,11 +11,12 @@ def dagLCA(root,node_1,node_2):
         return None
     elif node_1 is None or node_2 is None:
         return None
-    elif root.key == node_1 or root.key == node_2:
-        return root
+    elif root.key == node_1.key or root.key == node_2.key:
+        return root.key
     elif node_1 == node_2:
         return node_1.key
-    #perform lca computation
+    #perform lca computation 
+    #Also note that this works for cyclic graphs as well.
     else:
         lca = []
         i=0
@@ -36,4 +37,4 @@ def dagLCA(root,node_1,node_2):
             else:
                 lca.append(dagLCA(root,node_1,node_2.pred[0]))
 
-        return max(lca)
+        return lca
