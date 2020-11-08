@@ -1,64 +1,24 @@
 import unittest
-from LCA import Node
-from LCA import findLCA
-from LCA import findPath
+import LCA
 
 class TestLCA(unittest.TestCase):
 
-    #checks for LCA when LCA is a child of the root
-    def test_not_root_LCA(self):
-        root = Node(1)
-        root.left = Node(2)
-        root.right = Node(3)
-        root.left.left = Node(4)
-        root.left.right = Node(5)
-        root.right.left = Node(6)
-        root.right.right = Node(7)
-        self.assertEqual(findLCA(root, 4, 5), 2)
-
-    #check LCA can be found that is the root if it is the LCA
-    def test_root_LCA(self):
-        root = Node(1)
-        root.left = Node(2)
-        root.right = Node(3)
-        root.left.left = Node(4)
-        root.left.right = Node(5)
-        root.right.left = Node(6)
-        root.right.right = Node(7)
-        self.assertEqual(findLCA(root, 4, 6), 1)
-
-    #check empty binary tree cannot have a LCA
-    def test_empty_binary_tree(self):
-        root = None
-        self.assertEqual(findLCA(root, 1,2), -1)
-    
-    #checks LCA of root node doesn't exist
-    def test_root_only_binary_tree(self):
-        root = Node(1)
-        self.assertEqual(findLCA(root,2,3),-1)
-    
-    #check that empty root can't be connected to another node that is not its child
-    def test_find_path_empty(self):
-        root = None
-        x = Node(0)
-        self.assertEqual(findPath(root,[],x), False)
-    
-    #check that no path can be found between root and any child node (x is not connected)
-    def test_find_path_only_root(self):
-        root = Node(1)
-        x = Node(0)
-        self.assertEqual(findPath(root,[],x), False)
-    
-    #check that path can be found from node to another node (child)
-    def test_check_for_k(self):
-        root = Node(1)
-        root.left = Node(2)
-        root.right = Node(3)
-        root.left.left = Node(4)
-        root.left.right = Node(5)
-        root.right.left = Node(6)
-        root.right.right = Node(7)
-        self.assertEqual(findPath(root, [], 2), True)
+    #test base cases for 
+    def test_LCA_base_cases(self):
+        root = LCA.Node(1)
+        node_2 = LCA.Node(2)
+        node_3 = LCA.Node(3)
+        root.succ = [node_2]
+        node_2.succ = [node_3]
+        node_2.pred = [root]
+        node_3.pred = [node_2]
+        self.assertEqual(LCA.dagLCA(root, root, node_3), 1) #root and different key
+        self.assertEqual(LCA.dagLCA(root, node_3, root), 1) #different key and root
+        self.assertEqual(LCA.dagLCA(root, node_3, node_3), 3) #different key and root
+        self.assertEqual(LCA.dagLCA(root, root, root), 1) #root and root
+        self.assertEqual(LCA.dagLCA(root, None, root), None) #None and root
+        self.assertEqual(LCA.dagLCA(root, root, None), None) #root and none
+        self.assertEqual(LCA.dagLCA(None, root, node_3), None) #root is none
 
 if __name__ == '__main__':
     unittest.main()
